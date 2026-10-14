@@ -1,0 +1,47 @@
+{
+  "model": {
+    "model_id": "Qwen/Qwen2-1.5B-Instruct",
+    "quantization": "W8A16",
+    "load_in_8bit": true
+  },
+  "lora": {
+    "r": 8,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": ["q_proj", "v_proj"],
+    "bias": "none",
+    "task_type": "CAUSAL_LM"
+  },
+  "training": {
+    "num_train_epochs": 1,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 1e-5,
+    "optim": "adamw_torch",
+    "gradient_checkpointing": true,
+    "bf16": true,
+    "fp16": false,
+    "logging_steps": 5,
+    "save_steps": 50,
+    "save_total_limit": 2,
+    "report_to": "none"
+  },
+  "grpo": {
+    "num_generations": 4,
+    "max_completion_length": 1024,
+    "temperature": 0.7,
+    "reward": "binary_correctness"
+  },
+  "data": {
+    "dataset": "openai/gsm8k",
+    "config": "main",
+    "split": "train",
+    "n_problems": 200,
+    "seed": 42
+  },
+  "hardware": {
+    "gpu": "NVIDIA T4",
+    "vram_peak_gb": 8.87,
+    "training_time_minutes": 175
+  }
+}

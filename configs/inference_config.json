@@ -1,0 +1,74 @@
+{
+  "models": {
+    "qwen2": {
+      "model_id": "Qwen/Qwen2-1.5B-Instruct",
+      "requires_hf_token": false
+    },
+    "llama": {
+      "model_id": "meta-llama/Llama-3.2-1B-Instruct",
+      "requires_hf_token": true
+    }
+  },
+  "quantization": {
+    "BF16": {
+      "load_in_8bit": false,
+      "load_in_4bit": false,
+      "torch_dtype": "bfloat16"
+    },
+    "W8A16": {
+      "load_in_8bit": true,
+      "load_in_4bit": false
+    },
+    "W4A16": {
+      "load_in_8bit": false,
+      "load_in_4bit": true,
+      "bnb_4bit_quant_type": "nf4",
+      "bnb_4bit_compute_dtype": "bfloat16"
+    }
+  },
+  "decoding": {
+    "greedy": {
+      "do_sample": false,
+      "max_new_tokens": 1024
+    },
+    "self_consistency": {
+      "do_sample": true,
+      "temperature": 0.7,
+      "n_samples": 5,
+      "max_new_tokens": 1024
+    },
+    "speculative_decoding": {
+      "do_sample": false,
+      "max_new_tokens": 1024,
+      "draft_quant": "W4A16",
+      "verifier_configs": ["W8A16", "BF16"]
+    }
+  },
+  "datasets": {
+    "gsm8k": {
+      "hf_id": "openai/gsm8k",
+      "config": "main",
+      "eval_split": "test",
+      "n_problems": 50,
+      "seed": 42,
+      "difficulty_method": "step_count",
+      "easy_threshold": 2,
+      "hard_threshold": 5
+    },
+    "math": {
+      "hf_id": "EleutherAI/hendrycks_math",
+      "subjects": ["algebra", "geometry", "number_theory",
+                   "prealgebra", "precalculus"],
+      "eval_split": "test",
+      "n_problems": 50,
+      "seed": 42,
+      "difficulty_levels": ["Level 1", "Level 3", "Level 5"],
+      "n_per_level": [20, 20, 10]
+    }
+  },
+  "hardware": {
+    "gpu": "NVIDIA T4",
+    "platform": "Google Colab free tier",
+    "session_limit_hours": 4
+  }
+}
